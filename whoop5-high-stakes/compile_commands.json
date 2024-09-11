@@ -33,11 +33,11 @@
             "-funwind-tables",
             "--std=gnu++17",
             "-o",
-            "bin/main.cpp.o",
-            "src\\main.cpp"
+            "bin/globals.cc.o",
+            "src\\globals.cc"
         ],
         "directory": "C:\\Users\\Jerem\\OneDrive\\Documents\\career\\tamu\\clubs\\aggie_robotics\\whoop5-highstakes\\whoop5-high-stakes",
-        "file": "src\\main.cpp"
+        "file": "src\\globals.cc"
     },
     {
         "arguments": [
@@ -73,10 +73,10 @@
             "-funwind-tables",
             "--std=gnu++17",
             "-o",
-            "bin/globals.cc.o",
-            "src\\globals.cc"
+            "bin/main.cpp.o",
+            "src\\main.cpp"
         ],
         "directory": "C:\\Users\\Jerem\\OneDrive\\Documents\\career\\tamu\\clubs\\aggie_robotics\\whoop5-highstakes\\whoop5-high-stakes",
-        "file": "src\\globals.cc"
+        "file": "src\\main.cpp"
     }
 ]

@@ -173,12 +173,12 @@ void opcontrol() {
 
 	while (true) {
 		// read from the controller the the left and right joystick values. These values are from -127 to 127, which the same range used by the motors. 
-		int left = master.get_analog(ANALOG_LEFT_Y);
-		int right = master.get_analog(ANALOG_RIGHT_Y);
+		int rightX = master.get_analog(ANALOG_RIGHT_X);
+		int leftY = master.get_analog(ANALOG_LEFT_Y);
 
 		// set the motors powers to be the same as the joystick values
-		left_motor_group = left;
-		right_motor_group = right;
+		left_motor_group = leftY + rightX;
+		right_motor_group = leftY - rightX;
 		
 		// delay 20 milliseconds. **This is important because it gives the background threads a change to run**
 		pros::delay(20);

@@ -14,20 +14,20 @@
 // definitions make code easier to read, however in C++, it is generally recommended to use const variables instead because they have type safety
 
 // Ports
-#define LEFT_MOTOR_GROUP {-11, -12, -13, -18} // this is a vector, which is like a list in python or java
-#define RIGHT_MOTOR_GROUP {2, 3, 5, 6}
-#define INTAKE {17, -7}
+#define LEFT_MOTOR_GROUP {-11, -18, -13} // this is a vector, which is like a list in python or java
+#define RIGHT_MOTOR_GROUP {}6, 5, 2
+#define INTAKE {17, 7}
 
 #define IMU_PORT 4    // these numbers correspond to the ports on the brain
 #define FWD_PORT -1   // **when they are negative, it means that they are flipped. Ex. -1 for a motor will make motor go backwards when you input a positive value**
 #define LAT_PORT -14
 
-#define BEAM_BREAK_PORT 'A'   // 3-wire ports use characters instead of integers
+#define BEAM_BREAK_PORT 'H'   // 3-wire ports use characters instead of integers
 
 #define BACK_WING_L_PORT 'B'
 #define BACK_WING_R_PORT 'C'
 #define FRONT_WINGS_PORT 'D'
-#define ODOM_HYDRAULIC_PORT 'E'
+#define ODOM_HYDRAULIC_PORT {16, 'G'}, true
 
 // _mm, _in, _deg, ... are units. By using units, the compiler can check that your math is correct (ex. 1_deg + 1_mm is invalid)
 // Parameters
