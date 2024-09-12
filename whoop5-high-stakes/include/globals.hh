@@ -15,7 +15,7 @@
 
 // Ports
 #define LEFT_MOTOR_GROUP {-11, -18, -13} // this is a vector, which is like a list in python or java
-#define RIGHT_MOTOR_GROUP {}6, 5, 2
+#define RIGHT_MOTOR_GROUP {6, 5, 2}
 #define INTAKE {17, 7}
 
 #define IMU_PORT 4    // these numbers correspond to the ports on the brain
