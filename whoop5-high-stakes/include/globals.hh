@@ -36,16 +36,17 @@
 
 
 // background threads
-extern std::shared_ptr<rev::AsyncRunner> odom_runner;
-extern std::shared_ptr<rev::AsyncRunner> reckless_runner;
-extern std::shared_ptr<rev::AsyncRunner> turn_runner;
+// https://pros.cs.purdue.edu/v5/tutorials/topical/multitasking.html
+extern std::shared_ptr<rev::AsyncRunner> odom_runner;     // calculates robot's position in the background
+extern std::shared_ptr<rev::AsyncRunner> reckless_runner; // controls the chassis in the background
+extern std::shared_ptr<rev::AsyncRunner> turn_runner;     // does point turns in the background
 
 
 // controllers
-extern std::shared_ptr<rev::TwoRotationInertialOdometry> odom;
-extern std::shared_ptr<rev::SkidSteerChassis> chassis;
-extern std::shared_ptr<rev::Reckless> reckless;
-extern std::shared_ptr<rev::CampbellTurn> turn;
+extern std::shared_ptr<rev::TwoRotationInertialOdometry> odom; // tracks global position/velocity/angle
+extern std::shared_ptr<rev::SkidSteerChassis> chassis;         // controls the motors
+extern std::shared_ptr<rev::Reckless> reckless;                // drives the robot to points on the field
+extern std::shared_ptr<rev::CampbellTurn> turn;                // point turns
 
 
 // motor groups

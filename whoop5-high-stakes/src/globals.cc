@@ -6,7 +6,6 @@ std::shared_ptr<rev::AsyncRunner> reckless_runner;
 std::shared_ptr<rev::AsyncRunner> turn_runner;
 
 std::shared_ptr<rev::TwoRotationInertialOdometry> odom;
-std::shared_ptr<rev::SkidSteerChassis> chassis;
 
 std::shared_ptr<rev::Reckless> reckless;
 std::shared_ptr<rev::CampbellTurn> turn;
@@ -14,7 +13,11 @@ std::shared_ptr<rev::CampbellTurn> turn;
 // motor ports
 pros::MotorGroup left_motor_group(LEFT_MOTOR_GROUP);
 pros::MotorGroup right_motor_group(RIGHT_MOTOR_GROUP);
+std::shared_ptr<rev::SkidSteerChassis> chassis = std::make_shared<rev::SkidSteerChassis>(left_motor_group, right_motor_group);
+
+
 pros::MotorGroup intake(INTAKE);
+
 
 // sensor inputs
 pros::IMU imu(IMU_PORT);
