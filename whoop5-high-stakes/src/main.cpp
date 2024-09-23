@@ -2,11 +2,16 @@
 // when including standard C++ libraries, you use angle brackets. When including your own files, you use quotes.
 //https://en.cppreference.com/w/cpp/preprocessor/include
 #include "main.h"
+#include "pros/motors.hpp"
 #include "rev/rev.hh"
 #include "globals.hh"
 
+#include <string>
+
 // this makes it so you can just put the name of the item rather then putting rev:: before everything
 using namespace rev;
+
+void print_position();
 
 /**
  * Runs initialization code. This occurs as soon as the program is started.
@@ -15,11 +20,10 @@ using namespace rev;
  * to keep execution time for this mode under a few seconds.
  */
 void initialize() {
-	// creates a skid steer chassis object, which is a chassis with a group of motors on the left and the right
+	pros::lcd::initialize();
+
 	chassis = std::make_shared<rev::SkidSteerChassis>(left_motor_group, right_motor_group);
 
-	// creates the odometry system. This is how the robot tracks its global position on the field. 
-	// the parameters for it are defined in the globals.hh file
 	odom = std::make_shared<rev::TwoRotationInertialOdometry>(
     fwd,      // The forward sensor
     lat,      // The rightward sensor 
@@ -30,26 +34,14 @@ void initialize() {
     LATERAL_WHEEL_OFFSET    // How far to the rear of the robot the lateral wheel is from the center
   );
 
+
   // creates a turn controller object. This turn controller can only do point turns
   turn = std::make_shared<CampbellTurn>(chassis, odom, TURN_IKP1, TURN_IKP2);
 
+
   // creates a reckless controller object. This is used to drive the robot to points on the field
   reckless = std::make_shared<Reckless>(chassis, odom);
-
-	// these are the background threads that update reckless, odometry, and the turn controller. 
-    odom_runner = std::make_shared<rev::AsyncRunner>(odom);
-	reckless_runner = std::make_shared<rev::AsyncRunner>(reckless);
-	turn_runner = std::make_shared<rev::AsyncRunner> (turn);
-
-	// initialize the lcd screen
-	pros::lcd::initialize();
-
-	// delay 2 seconds so that the IMU has time to initialize
-  pros::delay(2000);
-
-  // sets the robot's position to be (0_in, 0_in, 0_deg). This is probably not necessary 
-  odom->reset_position();
-}
+  }
 
 /**
  * Runs while the robot is in the disabled state of Field Management System or
@@ -81,16 +73,18 @@ void competition_initialize() {}
  * from where it left off.
  */
 void autonomous() {
-	/*
-	 * The code in this function should drive the robot in a 20in by 20in square.
-	*/
+	odomHydraulic.set_value(0);
+
+    odom_runner = std::make_shared<rev::AsyncRunner>(odom);
+	reckless_runner = std::make_shared<rev::AsyncRunner>(reckless);
+	turn_runner = std::make_shared<rev::AsyncRunner> (turn);
+
+	odom->reset_position();
 
 
-	/*
-	 * The following function call will drive the robot to the point 20_in, 0_in. The 0_deg is meaningless,
-	 * but it is still required otherwise there will be a compiler error. 
-	 * The code can be copy and pasted, you just have to change out the coordinates to go to a different spot. 
-	*/
+	print_position();
+
+
 	reckless->go(
 		RecklessPath().with_segment(
 		RecklessPathSegment(
@@ -100,58 +94,19 @@ void autonomous() {
 			{ 20_in, 0_in, 0_deg },               // the target global position. Position 0, 0 is where the robot starts. the 0_deg is meaningless but it has to be included for syntax reasons
 			0_in)                                          // tells the robot to stop 0_in from the target
 	));
-	reckless->await(); // don't run the next code until the robot has reached the target
+
+	while (!reckless->is_completed()) {
+		print_position();
+		pros::delay(20);
+	}
 
 	// turn the robot 90 degrees with a max power of 70%
 	turn->turn_to_target_absolute(0.7, 90_deg);
-	turn->await();
-
-
-
-	reckless->go(RecklessPath().with_segment(
-		RecklessPathSegment(
-			std::make_shared<ConstantMotion>(0.5),
-			std::make_shared<PilonsCorrection>(4, 0.3_in),
-			std::make_shared<SimpleStop>(0.03_s, 0.15_s, 0.3), 
-			{ 20_in, 20_in, 0_deg }, 0_in)
-	));
-	reckless->await();
-
-
-	turn->turn_to_target_absolute(0.7, 180_deg);
-	turn->await();
-
-
-
-
-	reckless->go(RecklessPath().with_segment(
-		RecklessPathSegment(
-			std::make_shared<ConstantMotion>(0.5),
-			std::make_shared<PilonsCorrection>(4, 0.3_in),
-			std::make_shared<SimpleStop>(0.03_s, 0.15_s, 0.3), 
-			{ 0_in, 20_in, 0_deg }, 0_in)
-	));
-	reckless->await();
-
-
-	turn->turn_to_target_absolute(0.7, 270_deg);
-	turn->await();
-
-
-
-
-
-	reckless->go(RecklessPath().with_segment(
-		RecklessPathSegment(
-			std::make_shared<ConstantMotion>(0.5),
-			std::make_shared<PilonsCorrection>(4, 0.3_in),
-			std::make_shared<SimpleStop>(0.03_s, 0.15_s, 0.3), 
-			{ 0_in, 0_in, 0_deg }, 0_in)
-	));
-	reckless->await();
-
-	turn->turn_to_target_absolute(0.7, 0_deg);
-	turn->await();
+	
+	while (!turn->is_completed()) {
+		print_position();
+		pros::delay(20);
+	}
 }
 
 /**
@@ -168,6 +123,36 @@ void autonomous() {
  * task, not resume it from where it left off.
  */
 void opcontrol() {
+	pros::Motor_Group left_group LEFT_MOTOR_GROUP;
+	pros::Motor_Group right_group RIGHT_MOTOR_GROUP;
+	pros::Motor_Group intake_group INTAKE;
+
+
+	pros::Controller master(pros::E_CONTROLLER_MASTER); // used to get inputs from the users's controller
+
+
+    while (true) {
+		int left = master.get_analog(ANALOG_LEFT_Y);
+		int right = master.get_analog(ANALOG_RIGHT_Y);
+
+		left_group = left;
+		right_group = right;
+
+		pros::delay(20);
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 	pros::lcd::set_text(0, "Hello PROS User!"); // shows text on the LCD. Useful for testing purposes. 
 	pros::Controller master(pros::E_CONTROLLER_MASTER); // used to get inputs from the users's controller
 
@@ -182,5 +167,17 @@ void opcontrol() {
 		
 		// delay 20 milliseconds. **This is important because it gives the background threads a change to run**
 		pros::delay(20);
-	}
+	}*/
+}
+
+
+void print_position() {
+	std::string position = "Position: ";
+	position += std::to_string(odom->get_state().pos.x.convert(inch));
+	position += ", ";
+	position += std::to_string(odom->get_state().pos.y.convert(inch));
+	position += ", ";
+	position += std::to_string(odom->get_state().pos.theta.convert(degree));
+
+	pros::lcd::set_text(2, position);
 }
