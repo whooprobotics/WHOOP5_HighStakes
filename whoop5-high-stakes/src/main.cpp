@@ -41,6 +41,8 @@ void initialize() {
 
   // creates a reckless controller object. This is used to drive the robot to points on the field
   reckless = std::make_shared<Reckless>(chassis, odom);
+
+  pros::delay(2000);
   }
 
 /**
