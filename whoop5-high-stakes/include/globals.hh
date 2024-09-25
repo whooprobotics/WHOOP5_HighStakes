@@ -11,7 +11,7 @@
 
 
 #define IMU_PORT 4 
-#define FWD_PORT -1   // **when they are negative, it means that they are flipped. Ex. -1 for a motor will make motor go backwards when you input a positive value**
+#define FWD_PORT 1, true   // ** JEREMY HOW COULD YOU???? when they are negative, it means that they are flipped. Ex. -1 for a motor will make motor go backwards when you input a positive value**
 #define LAT_PORT 14
 
 // 3 wire ports

@@ -5,20 +5,21 @@
       "includePath": [
         "${workspaceFolder}/**",
         "c:\\Users\\Jerem\\OneDrive\\Documents\\career\\tamu\\clubs\\aggie robotics\\pros_test\\whoop5-highstakes\\whoop5-high-stakes\\include",
-        "c:\\Users\\Jerem\\OneDrive\\Documents\\career\\tamu\\clubs\\aggie_robotics\\whoop5-highstakes\\whoop5-high-stakes\\include"
+        "c:\\Users\\Jerem\\OneDrive\\Documents\\career\\tamu\\clubs\\aggie_robotics\\whoop5-highstakes\\whoop5-high-stakes\\include",
+        "c:\\Users\\benja\\OneDrive\\Desktop\\Pain\\WHOOP5_HighStakes\\whoop5-high-stakes\\include"
       ],
       "defines": [
         "_DEBUG",
         "UNICODE",
         "_UNICODE"
       ],
-      "compilerPath": "c:\\Users\\Jerem\\AppData\\Roaming\\Code\\User\\globalStorage\\sigbots.pros\\install\\pros-toolchain-windows\\usr\\bin\\arm-none-eabi-g++",
+      "compilerPath": "c:\\Users\\benja\\AppData\\Roaming\\Code\\User\\globalStorage\\sigbots.pros\\install\\pros-toolchain-windows\\usr\\bin\\arm-none-eabi-g++",
       "cStandard": "gnu11",
       "cppStandard": "gnu++20",
       "intelliSenseMode": "gcc-arm",
       "browse": {
         "path": [
-          "c:\\Users\\Jerem\\OneDrive\\Documents\\career\\tamu\\clubs\\aggie_robotics\\whoop5-highstakes\\whoop5-high-stakes"
+          "c:\\Users\\benja\\OneDrive\\Desktop\\Pain\\WHOOP5_HighStakes\\whoop5-high-stakes"
         ],
         "limitSymbolsToIncludedHeaders": true,
         "databaseFilename": ""

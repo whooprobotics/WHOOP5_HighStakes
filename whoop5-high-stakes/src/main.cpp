@@ -43,6 +43,13 @@ void initialize() {
   reckless = std::make_shared<Reckless>(chassis, odom);
 
   pros::delay(2000);
+
+    odom_runner = std::make_shared<rev::AsyncRunner>(odom);
+	reckless_runner = std::make_shared<rev::AsyncRunner>(reckless);
+	turn_runner = std::make_shared<rev::AsyncRunner> (turn);
+
+    pros::delay(2000);
+    odom->reset_position();
   }
 
 /**
@@ -90,7 +97,7 @@ void autonomous() {
 	reckless->go(
 		RecklessPath().with_segment(
 		RecklessPathSegment(
-			std::make_shared<ConstantMotion>(0.5),             // tells the robot to move at 50% power
+			std::make_shared<ConstantMotion>(0.2),             // tells the robot to move at 50% power
 			std::make_shared<PilonsCorrection>(4, 0.3_in), // if the robot is 0.3in or more off the path, then it will start correcting that path
 			std::make_shared<SimpleStop>(0.03_s, 0.15_s, 0.3),   // robot will soft stop if it is 0.15 seconds from the finish, and hard stop when it is 0.03 seconds from the finish. Soft stop means that the speed is set to 30% power. Hard stop means that the brakes are applied
 			{ 20_in, 0_in, 0_deg },               // the target global position. Position 0, 0 is where the robot starts. the 0_deg is meaningless but it has to be included for syntax reasons
